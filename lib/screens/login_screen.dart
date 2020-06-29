@@ -1,3 +1,4 @@
+import 'package:chat_app/screens/create_pin_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,31 +14,65 @@ class _LoginScreenState extends State<LoginScreen> {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: Column(
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: ListView(
+              physics: ClampingScrollPhysics(),
+              shrinkWrap: true,
               children: <Widget>[
-                SizedBox(
-                  height: 20,
-                ),
                 Image.asset(
                   "assets/ehi_logo.png",
-                  height: MediaQuery.of(context).size.height * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.20,
+                ),
+                SizedBox(
+                  height: 70,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: "Username",
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
+                    ),
+                    //fillColor: Colors.green
+                  ),
+                  keyboardType: TextInputType.emailAddress,
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Username'),
+                  decoration: InputDecoration(
+                    labelText: "Password",
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(),
+                    ),
+                    //fillColor: Colors.green
+                  ),
+                  keyboardType: TextInputType.visiblePassword,
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Password'),
+                SizedBox(
+                  height: 50,
                 ),
-                SizedBox(height: 20,),
                 RaisedButton(
-                  child: Text("Login", style: TextStyle(fontSize: 30),),
-                  onPressed: () {},
+                  child: Text(
+                    "Login",
+                    style: TextStyle(fontSize: 25),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CreatePinScreen(),
+                        ));
+                  },
                 )
               ],
             ),
+          ),
         ),
         backgroundColor: const Color(0xfffdfeff),
       ),
