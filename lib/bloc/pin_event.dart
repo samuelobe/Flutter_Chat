@@ -11,3 +11,10 @@ class AddPin extends PinEvent {
   @override
   List<Object> get props => [number];
 }
+
+class RemovePin extends PinEvent {
+final String number;
+  RemovePin({this.number});
+  @override
+  List<Object> get props => [number];
+}

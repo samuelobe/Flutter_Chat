@@ -14,6 +14,11 @@ class PinBloc extends Bloc<PinEvent, PinState> {
   Stream<PinState> mapEventToState(
     PinEvent event,
   ) async* {
-    // TODO: implement mapEventToState
+    if (event is AddPin) {
+      yield PinAdded(number: event.number);
+    }
+    else if (event is RemovePin){
+      yield PinRemoved(number: event.number);
+    }
   }
 }

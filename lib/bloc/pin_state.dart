@@ -13,5 +13,12 @@ class PinAdded extends PinState {
   final String number;
   PinAdded({this.number});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [number];
+}
+
+class PinRemoved extends PinState {
+  final String number;
+  PinRemoved({this.number});
+  @override
+  List<Object> get props => [number];
 }

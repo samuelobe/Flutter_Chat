@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  splashscreen: ^1.2.0
   equatable: ^1.2.0
   flutter_bloc: ^4.0.1
   flutter:
@@ -41,6 +42,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/ehi_logo.png
+    - assets/ehiapps.gif
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
