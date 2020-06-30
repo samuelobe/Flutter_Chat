@@ -1,3 +1,4 @@
+import 'package:chat_app/screens/auth_screen.dart';
 import 'package:chat_app/screens/create_pin_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -66,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => CreatePinScreen(),
+                          builder: (context) => CreatePinScreen(),//PinPutTest(),
                         ));
                   },
                 )

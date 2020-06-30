@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  pinput: ^0.2.4
   splashscreen: ^1.2.0
   equatable: ^1.2.0
   flutter_bloc: ^4.0.1
