@@ -1,11 +1,6 @@
-import 'package:chat_app/screens/create_pin_screen.dart';
-import 'package:chat_app/screens/users_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:chat_app/model/user.dart';
+import 'package:chat_app/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'auth_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
@@ -16,37 +11,16 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formkey = GlobalKey<FormState>();
-
-  String _email, _password;
+  String email, password;
+  Auth auth = Auth();
 
   Future<void> signIn() async {
     var formState = _formkey.currentState;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+
     if (formState.validate()) {
       formState.save();
-      try {
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: _email, password: _password);
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => UsersScreen(),
-            ));
-        prefs.setStringList(_email, [_password,""]);
-      } catch (e) {
-        Flushbar(
-            margin: EdgeInsets.only(bottom: 5),
-            maxWidth: MediaQuery.of(context).size.width * 0.95,
-            flushbarStyle: FlushbarStyle.FLOATING,
-            borderRadius: 8,
-            flushbarPosition: FlushbarPosition.BOTTOM,
-            message: "Incorrect username or password",
-            isDismissible: true,
-            duration: Duration(seconds: 3),
-            //animationDuration: Duration(milliseconds: 100),
-          )..show(context);
-        print(e.message);
-      }
+      var user = User(email: email, password: password);
+      auth.authSignIn(user: user, context: context);
     }
   }
 
@@ -88,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                       return output;
                     },
-                    onSaved: (input) => _email = input.trim(),
+                    onSaved: (input) => email = input.trim(),
                   ),
                   SizedBox(
                     height: 20,
@@ -111,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                       return output;
                     },
-                    onSaved: (input) => _password = input.trim(),
+                    onSaved: (input) => password = input.trim(),
                   ),
                   SizedBox(
                     height: 30,
