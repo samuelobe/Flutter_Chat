@@ -1,6 +1,4 @@
-import 'package:chat_app/bloc/pin_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreatePinScreen extends StatefulWidget {
   CreatePinScreen({Key key}) : super(key: key);

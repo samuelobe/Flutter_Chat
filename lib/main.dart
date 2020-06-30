@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: SplashScreen(
-        loaderColor: Colors.white,
+        loaderColor: const Color(0xfffdfeff),
+        backgroundColor: const Color(0xfffdfeff),
         seconds: 5,
         photoSize: 200,
         navigateAfterSeconds: LoginScreen(),
