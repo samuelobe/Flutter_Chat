@@ -1,5 +1,7 @@
 import 'package:chat_app/screens/create_pin_screen.dart';
+import 'package:chat_app/screens/users_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,10 +30,21 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PinPutTest(),
+              builder: (context) => UsersScreen(),
             ));
         prefs.setStringList(_email, [_password,""]);
       } catch (e) {
+        Flushbar(
+            margin: EdgeInsets.only(bottom: 5),
+            maxWidth: MediaQuery.of(context).size.width * 0.95,
+            flushbarStyle: FlushbarStyle.FLOATING,
+            borderRadius: 8,
+            flushbarPosition: FlushbarPosition.BOTTOM,
+            message: "Incorrect username or password",
+            isDismissible: true,
+            duration: Duration(seconds: 3),
+            //animationDuration: Duration(milliseconds: 100),
+          )..show(context);
         print(e.message);
       }
     }
