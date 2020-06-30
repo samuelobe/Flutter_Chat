@@ -1,8 +1,10 @@
+import 'package:chat_app/model/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class UsersScreen extends StatefulWidget {
-  UsersScreen({Key key}) : super(key: key);
+  final User currentUser;
+  UsersScreen({this.currentUser});
 
   @override
   _UsersScreenState createState() => _UsersScreenState();
@@ -33,9 +35,15 @@ class _UsersScreenState extends State<UsersScreen> {
                 return ListView(
                   children:
                       snapshot.data.documents.map((DocumentSnapshot document) {
-                    return ListTile(
-                      title: Text(document['email']),
-                    );
+                    if (widget.currentUser.email != document['email']) {
+                      return Card(
+                        child: ListTile(
+                          title: Text(document['name']),
+                          subtitle: Text(document['email']),
+                        ),
+                      );
+                    }
+                    return Container();
                   }).toList(),
                 );
             }

@@ -20,7 +20,7 @@ class Auth {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => UsersScreen(),
+            builder: (context) => UsersScreen(currentUser: user,),
           ));
     } catch (e) {
       Flushbar(
