@@ -21,6 +21,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  dash_chat: ^1.1.10
   flushbar: ^1.10.4
   shared_preferences: ^0.5.7+3
   firebase_auth: ^0.14.0+5
