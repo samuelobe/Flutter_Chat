@@ -1,6 +1,7 @@
 import 'package:chat_app/screens/create_pin_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'auth_screen.dart';
 
@@ -13,10 +14,12 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formkey = GlobalKey<FormState>();
+
   String _email, _password;
 
   Future<void> signIn() async {
     var formState = _formkey.currentState;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (formState.validate()) {
       formState.save();
       try {
@@ -27,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
             MaterialPageRoute(
               builder: (context) => PinPutTest(),
             ));
+        prefs.setStringList(_email, [_password,""]);
       } catch (e) {
         print(e.message);
       }
@@ -67,11 +71,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     validator: (input) {
                       var output;
                       if (input.isEmpty) {
-                        output = "Please type a password";
+                        output = "Please type a username";
                       }
                       return output;
                     },
-                    onSaved: (input) => _email = input,
+                    onSaved: (input) => _email = input.trim(),
                   ),
                   SizedBox(
                     height: 20,
@@ -94,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       }
                       return output;
                     },
-                    onSaved: (input) => _password = input,
+                    onSaved: (input) => _password = input.trim(),
                   ),
                   SizedBox(
                     height: 30,
