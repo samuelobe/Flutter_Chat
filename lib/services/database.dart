@@ -5,6 +5,7 @@ class Database {
   final Firestore firestore = Firestore.instance;
 
   void setUserData(User user){
-    firestore.collection('users').document(user.email).setData(user.getMap());
+    var userData = user.getMap();
+    firestore.collection('users').document(user.email).setData(userData);
   }
 }
