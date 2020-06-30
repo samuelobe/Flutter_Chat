@@ -1,5 +1,6 @@
 import 'package:chat_app/model/user.dart';
 import 'package:chat_app/screens/users_screen.dart';
+import 'package:chat_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  final Database firestore = Database();
 
   Future<void> authSignIn(
       {User user, BuildContext context}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       await auth.signInWithEmailAndPassword(email: user.email, password: user.password);
+      firestore.setUserData(user);
       prefs.setStringList(user.email, [user.password, ""]);
       Navigator.push(
           context,
@@ -31,7 +34,7 @@ class Auth {
         duration: Duration(seconds: 3),
         //animationDuration: Duration(milliseconds: 100),
       )..show(context);
-      print(e.message);
+      //print(e.message);
     }
   }
 }
