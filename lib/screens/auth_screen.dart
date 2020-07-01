@@ -13,8 +13,8 @@ class AuthScreen extends StatefulWidget {
 }
 
 class AuthScreenState extends State<AuthScreen> {
-  final TextEditingController _pinPutController1 = TextEditingController();
-  final FocusNode _pinPutFocusNode1 = FocusNode();
+  final TextEditingController _pinPutController = TextEditingController();
+  final FocusNode _pinPutFocusNode = FocusNode();
   Auth auth = Auth();
   LocalAuthentication localAuth = LocalAuthentication();
 
@@ -49,8 +49,8 @@ class AuthScreenState extends State<AuthScreen> {
                     onSubmit: (String pin) {
                       submittedPin = pin;
                     },
-                    focusNode: _pinPutFocusNode1,
-                    controller: _pinPutController1,
+                    focusNode: _pinPutFocusNode,
+                    controller: _pinPutController,
                     submittedFieldDecoration: _pinPutDecoration.copyWith(
                         borderRadius: BorderRadius.circular(20)),
                     selectedFieldDecoration: _pinPutDecoration,
@@ -82,28 +82,28 @@ class AuthScreenState extends State<AuthScreen> {
                 SizedBox(
                   height: 30,
                 ),
-                RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Text(
-                      "Sign In with Biometrics",
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                  onPressed: () async {
-                    // bool biometricsAvailable =
-                    //     await localAuth.canCheckBiometrics;
+                // RaisedButton(
+                //   shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(18.0),
+                //   ),
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(14.0),
+                //     child: Text(
+                //       "Sign In with Biometrics",
+                //       style: TextStyle(fontSize: 20),
+                //     ),
+                //   ),
+                //   onPressed: () async {
+                //     bool biometricsAvailable =
+                //         await localAuth.canCheckBiometrics;
 
-                    // if (biometricsAvailable) {
-                    //   var auth = localAuth.authenticateWithBiometrics(
-                    //       localizedReason: "Sign into your chat app account");
-                    //   print(auth);
-                    // }
-                  },
-                ),
+                //     if (biometricsAvailable) {
+                //       var auth = localAuth.authenticateWithBiometrics(
+                //           localizedReason: "Sign into your chat app account");
+                //       print(auth);
+                //     }
+                //   },
+                // ),
               ],
             ),
           ),

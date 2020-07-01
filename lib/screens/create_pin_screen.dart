@@ -4,6 +4,7 @@ import 'package:chat_app/services/auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:local_auth/local_auth.dart';
 
 class CreatePinScreen extends StatefulWidget {
   final User user;

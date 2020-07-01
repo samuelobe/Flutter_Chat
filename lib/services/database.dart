@@ -43,7 +43,7 @@ class Database {
           .collection("chats")
           .document(email1)
           .setData({"chatUUID": idV1}, merge: true);
-      print("Does not exist");
+      print("Chat does not exist yet... Creating UUID");
     }
 
     return idV1;
