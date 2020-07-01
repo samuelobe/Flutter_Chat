@@ -15,7 +15,6 @@ class Auth {
     try {
       await auth.signInWithEmailAndPassword(
           email: user.email, password: user.password);
-      firestore.setUserData(user);
       prefs.setStringList(user.email, [user.password, ""]);
       Navigator.push(
           context,

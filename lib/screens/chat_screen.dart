@@ -6,23 +6,29 @@ import 'package:flutter/material.dart';
 class ChatScreen extends StatefulWidget {
   final String name;
   final String email;
+  final String currentEmail;
+  final String uuid;
 
-  ChatScreen({this.name, this.email});
+  ChatScreen({this.name, this.email, this.currentEmail, this.uuid});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final Firestore firestore = Firestore.instance;
+  final Firestore firestoreInstance = Firestore.instance;
+
   final ScrollController _scrollController = ScrollController();
   TextEditingController _messageController = TextEditingController();
+
   String message = "";
 
   Future<void> onSend() async {
     if (_messageController.text.length > 0) {
-      await firestore
+      await firestoreInstance
           .collection('messages')
+          .document(widget.uuid)
+          .collection("data")
           .document(DateTime.now().toString())
           .setData({
         "message": _messageController.text,
@@ -39,13 +45,14 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  //getUUID();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
-          title: Text("Chat Screen"),
+          title: Text(widget.name),
         ),
         body: Container(
           padding: EdgeInsets.all(10),
@@ -59,8 +66,11 @@ class _ChatScreenState extends State<ChatScreen> {
                     return null;
                   },
                   child: StreamBuilder<QuerySnapshot>(
-                    stream:
-                        Firestore.instance.collection('messages').snapshots(),
+                    stream: Firestore.instance
+                        .collection('messages')
+                        .document(widget.uuid)
+                        .collection("data")
+                        .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError)

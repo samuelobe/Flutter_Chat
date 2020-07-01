@@ -1,6 +1,7 @@
 import 'package:chat_app/model/user.dart';
 import 'package:chat_app/screens/chat_screen.dart';
 import 'package:chat_app/screens/login_screen.dart';
+import 'package:chat_app/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,8 @@ class UsersScreen extends StatefulWidget {
 
 class _UsersScreenState extends State<UsersScreen> {
   final Firestore firestore = Firestore.instance;
+  final Database db = Database();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,14 +65,20 @@ class _UsersScreenState extends State<UsersScreen> {
                           ),
                           title: Text(document['firstName']),
                           subtitle: Text(document['email']),
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ChatScreen(
-                                  name: document['firstName'],
-                                  email: document['email'],
-                                ),
-                              )),
+                          onTap: () async {
+                            var uuid = await db.createChat(
+                                widget.currentUser.email, document['email']);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ChatScreen(
+                                    name: document['firstName'],
+                                    email: document['email'],
+                                    currentEmail: widget.currentUser.email,
+                                    uuid: uuid,
+                                  ),
+                                ));
+                          },
                         ),
                       );
                     }

@@ -5,12 +5,13 @@ class User {
   final String firstName;
   final String lastName;
 
-  User(
-      {this.email,
-      this.password,
-      this.phoneNumber,
-      this.firstName,
-      this.lastName});
+  User({
+    this.email,
+    this.password,
+    this.phoneNumber,
+    this.firstName,
+    this.lastName,
+  });
 
   get getEmail => email;
   get getPassword => password;
