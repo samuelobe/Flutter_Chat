@@ -24,7 +24,11 @@ class _ChatScreenState extends State<ChatScreen> {
       await firestore
           .collection('messages')
           .document(DateTime.now().toString())
-          .setData({"message": _messageController.text, "email": widget.email});
+          .setData({
+        "message": _messageController.text,
+        "email": widget.email,
+        "timestamp": "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}"
+      });
 
       _messageController.clear();
       _scrollController.animateTo(
@@ -81,10 +85,20 @@ class _ChatScreenState extends State<ChatScreen> {
                                     ? Alignment.centerRight
                                     : Alignment.centerLeft,
                                 child: Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
                                     color: Colors.blue,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: Text(document['message']),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(document['message']),
+                                          Text(document['timestamp']),
+                                        ],
+                                      ),
                                     )),
                               );
                             }).toList(),

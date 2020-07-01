@@ -1,4 +1,5 @@
 import 'package:chat_app/model/user.dart';
+import 'package:chat_app/screens/signup_screen.dart';
 import 'package:chat_app/services/auth.dart';
 import 'package:flutter/material.dart';
 
@@ -89,18 +90,40 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 30,
                 ),
-                RaisedButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: Text(
-                      "Sign In",
-                      style: TextStyle(fontSize: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Text(
+                          "Sign In",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      onPressed: signIn,
                     ),
-                  ),
-                  onPressed: signIn,
+                    RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: Text(
+                          "Sign Up",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignupScreen(),
+                          )),
+                    ),
+                  ],
                 )
               ],
             ),
