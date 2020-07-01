@@ -1,3 +1,5 @@
+import 'package:chat_app/model/user.dart';
+import 'package:chat_app/services/auth.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -8,10 +10,27 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final _formkey = GlobalKey<FormState>();
   String fullName = "";
-  String emailAddress = "";
+  String phoneNumber = "";
+  String firstName = "";
+  String lastName = "";
+  String email = "";
   String password = "";
+  Auth auth = Auth();
 
-  void createAccount() {}
+  void createAccount() {
+    var formState = _formkey.currentState;
+
+    if (formState.validate()) {
+      formState.save();
+      var user = User(
+          email: email,
+          password: password,
+          firstName: firstName,
+          lastName: lastName,
+          phoneNumber: phoneNumber);
+      auth.authSignUp(user: user, context: context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +69,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     }
                     return output;
                   },
-                  //onSaved: (input) => password = input.trim(),
+                  onSaved: (input) => firstName = input.trim(),
                 ),
                 SizedBox(
                   height: 20,
@@ -73,11 +92,11 @@ class _SignupScreenState extends State<SignupScreen> {
                   validator: (input) {
                     var output;
                     if (input.isEmpty) {
-                      output = "Please type your first name";
+                      output = "Please type your last name";
                     }
                     return output;
                   },
-                  //onSaved: (input) => password = input.trim(),
+                  onSaved: (input) => lastName = input.trim(),
                 ),
                 SizedBox(
                   height: 20,
@@ -100,11 +119,11 @@ class _SignupScreenState extends State<SignupScreen> {
                   validator: (input) {
                     var output;
                     if (input.isEmpty) {
-                      output = "Please type your first name";
+                      output = "Please type your phone number";
                     }
                     return output;
                   },
-                  //onSaved: (input) => password = input.trim(),
+                  onSaved: (input) => phoneNumber = input.trim(),
                 ),
                 SizedBox(
                   height: 20,
@@ -127,11 +146,11 @@ class _SignupScreenState extends State<SignupScreen> {
                   validator: (input) {
                     var output;
                     if (input.isEmpty) {
-                      output = "Please type an email address";
+                      output = "Please type your email address";
                     }
                     return output;
                   },
-                  //onSaved: (input) => password = input.trim(),
+                  onSaved: (input) => email = input.trim(),
                 ),
                 SizedBox(
                   height: 20,
@@ -154,11 +173,11 @@ class _SignupScreenState extends State<SignupScreen> {
                   validator: (input) {
                     var output;
                     if (input.isEmpty) {
-                      output = "Please type a password";
+                      output = "Please type your password";
                     }
                     return output;
                   },
-                  //onSaved: (input) => password = input.trim(),
+                  onSaved: (input) => password = input.trim(),
                 ),
                 SizedBox(
                   height: 20,

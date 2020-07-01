@@ -1,5 +1,6 @@
 import 'package:chat_app/model/user.dart';
 import 'package:chat_app/screens/chat_screen.dart';
+import 'package:chat_app/screens/login_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -17,11 +18,18 @@ class _UsersScreenState extends State<UsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text('Users Screen'),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.add_comment),
-              onPressed: () {},
+              icon: Icon(Icons.home),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ));
+              },
             )
           ],
         ),
@@ -52,13 +60,13 @@ class _UsersScreenState extends State<UsersScreen> {
                             Icons.account_circle,
                             size: 40,
                           ),
-                          title: Text(document['name']),
+                          title: Text(document['firstName']),
                           subtitle: Text(document['email']),
                           onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ChatScreen(
-                                  name: document['name'],
+                                  name: document['firstName'],
                                   email: document['email'],
                                 ),
                               )),
