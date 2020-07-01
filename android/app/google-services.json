@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "397071440130",
+    "firebase_url": "https://chat-application-673c4.firebaseio.com",
+    "project_id": "chat-application-673c4",
+    "storage_bucket": "chat-application-673c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:397071440130:android:304fa19347b0d8b4940a1b",
+        "android_client_info": {
+          "package_name": "ehi.chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "397071440130-tqevma832vi4cfeiosmugfdlvbv2ku82.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUHBLY51WF4qqYZ0BP6yPQJ3cWYirVJ3k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "397071440130-tqevma832vi4cfeiosmugfdlvbv2ku82.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
