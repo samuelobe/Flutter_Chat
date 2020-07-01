@@ -44,7 +44,7 @@ class CreatePinScreenState extends State<CreatePinScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Text("Type in your pin"),
+                  Text("Create your pin"),
                   Container(
                     color: Colors.white,
                     margin: EdgeInsets.all(20),

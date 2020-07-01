@@ -31,7 +31,6 @@ class _SignupScreenState extends State<SignupScreen> {
           phoneNumber: phoneNumber);
       auth.authSignUp(user: user, context: context);
       prefs.setStringList(user.email, [user.password, ""]);
-      
     }
   }
 

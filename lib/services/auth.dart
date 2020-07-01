@@ -14,13 +14,19 @@ class Auth {
 
   Future<void> authSignIn({User user, BuildContext context}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-
+    var value;
     try {
       await auth.signInWithEmailAndPassword(
           email: user.email, password: user.password);
       print("Signed In to Firebase Auth");
 
-      if (prefs.getStringList(user.email)[1] == "") {
+      try {
+        value = prefs.getStringList(user.email)[1] ?? "";
+      } catch (e) {
+        value = "";
+      }
+
+      if (value == "") {
         Navigator.push(
             context,
             MaterialPageRoute(
