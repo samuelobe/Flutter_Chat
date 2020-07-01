@@ -22,7 +22,7 @@ class _UsersScreenState extends State<UsersScreen> {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text('Users Screen'),
+          title: Text('Chats'),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.home),

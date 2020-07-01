@@ -1,18 +1,26 @@
+import 'package:chat_app/model/user.dart';
+import 'package:chat_app/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
-class PinPutTest extends StatefulWidget {
+class AuthScreen extends StatefulWidget {
+  final User user;
+  AuthScreen({this.user});
+
   @override
-  PinPutTestState createState() => PinPutTestState();
+  AuthScreenState createState() => AuthScreenState();
 }
 
-class PinPutTestState extends State<PinPutTest> {
-  final TextEditingController _pinPutController = TextEditingController();
-  final FocusNode _pinPutFocusNode = FocusNode();
+class AuthScreenState extends State<AuthScreen> {
+  final TextEditingController _pinPutController1 = TextEditingController();
+  final FocusNode _pinPutFocusNode1 = FocusNode();
+  Auth auth = Auth();
+
+  String submittedPin = "";
 
   BoxDecoration get _pinPutDecoration {
     return BoxDecoration(
-      border: Border.all(color: Colors.deepPurpleAccent),
+      border: Border.all(color: Colors.blue),
       borderRadius: BorderRadius.circular(15),
     );
   }
@@ -20,78 +28,65 @@ class PinPutTestState extends State<PinPutTest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-        backgroundColor: Colors.white,
-        body: Builder(
-          builder: (context) {
-            return Center(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      color: Colors.white,
-                      margin: EdgeInsets.all(20),
-                      padding: EdgeInsets.all(20),
-                      child: PinPut(
-                        fieldsCount: 5,
-                        onSubmit: (String pin) => _showSnackBar(pin, context),
-                        focusNode: _pinPutFocusNode,
-                        controller: _pinPutController,
-                        submittedFieldDecoration: _pinPutDecoration.copyWith(
-                            borderRadius: BorderRadius.circular(20)),
-                        selectedFieldDecoration: _pinPutDecoration,
-                        followingFieldDecoration: _pinPutDecoration.copyWith(
-                          borderRadius: BorderRadius.circular(5),
-                          border: Border.all(
-                            color: Colors.deepPurpleAccent.withOpacity(.5),
-                          ),
+      appBar: AppBar(
+        title: Text("PIN"),
+      ),
+      backgroundColor: Colors.white,
+      body: Builder(
+        builder: (context) {
+          return Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text("Type in your pin"),
+                  Container(
+                    color: Colors.white,
+                    margin: EdgeInsets.all(20),
+                    padding: EdgeInsets.all(20),
+                    child: PinPut(
+                      fieldsCount: 6,
+                      onSubmit: (String pin) {
+                        submittedPin = pin;
+                      },
+                      focusNode: _pinPutFocusNode1,
+                      controller: _pinPutController1,
+                      submittedFieldDecoration: _pinPutDecoration.copyWith(
+                          borderRadius: BorderRadius.circular(20)),
+                      selectedFieldDecoration: _pinPutDecoration,
+                      followingFieldDecoration: _pinPutDecoration.copyWith(
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(
+                          color: Colors.blue,
                         ),
                       ),
                     ),
-                    SizedBox(height: 30),
-                    Divider(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        FlatButton(
-                          child: Text('Focus'),
-                          onPressed: () => _pinPutFocusNode.requestFocus(),
-                        ),
-                        FlatButton(
-                          child: Text('Unfocus'),
-                          onPressed: () => _pinPutFocusNode.unfocus(),
-                        ),
-                        FlatButton(
-                          child: Text('Clear All'),
-                          onPressed: () => _pinPutController.text = '',
-                        ),
-                      ],
+                  ),
+                  SizedBox(height: 30),
+                  RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
                     ),
-                  ],
-                ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: Text(
+                        "Sign In",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    onPressed: () {
+                      auth.verifyPIN(
+                          user: widget.user,
+                          pin: submittedPin,
+                          context: context);
+                    },
+                  ),
+                ],
               ),
-            );
-          },
-        ),
-      );
-
-  }
-
-  void _showSnackBar(String pin, BuildContext context) {
-    final snackBar = SnackBar(
-      duration: Duration(seconds: 3),
-      content: Container(
-          height: 80.0,
-          child: Center(
-            child: Text(
-              'Pin Submitted. Value: $pin',
-              style: TextStyle(fontSize: 25.0),
             ),
-          )),
-      backgroundColor: Colors.deepPurpleAccent,
+          );
+        },
+      ),
     );
-    Scaffold.of(context).hideCurrentSnackBar();
-    Scaffold.of(context).showSnackBar(snackBar);
   }
 }

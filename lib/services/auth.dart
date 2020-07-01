@@ -1,4 +1,6 @@
 import 'package:chat_app/model/user.dart';
+import 'package:chat_app/screens/auth_screen.dart';
+import 'package:chat_app/screens/create_pin_screen.dart';
 import 'package:chat_app/screens/users_screen.dart';
 import 'package:chat_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,17 +14,27 @@ class Auth {
 
   Future<void> authSignIn({User user, BuildContext context}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
     try {
       await auth.signInWithEmailAndPassword(
           email: user.email, password: user.password);
-      prefs.setStringList(user.email, [user.password, ""]);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => UsersScreen(
-              currentUser: user,
-            ),
-          ));
+      print("Signed In to Firebase Auth");
+
+      if (prefs.getStringList(user.email)[1] == "") {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CreatePinScreen(
+                      user: user,
+                    )));
+      } else {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AuthScreen(
+                      user: user,
+                    )));
+      }
     } catch (e) {
       Flushbar(
         margin: EdgeInsets.only(bottom: 5),
@@ -64,6 +76,36 @@ class Auth {
         //animationDuration: Duration(milliseconds: 100),
       )..show(context);
       print(e.message);
+    }
+  }
+
+  createPIN({User user, String pin}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList(user.email, [user.password, pin]);
+    print(prefs.getStringList(user.email)[1]);
+  }
+
+  verifyPIN({User user, String pin, BuildContext context}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getStringList(user.email)[1] == pin) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => UsersScreen(
+                    currentUser: user,
+                  )));
+    } else {
+      Flushbar(
+        margin: EdgeInsets.only(bottom: 5),
+        maxWidth: MediaQuery.of(context).size.width * 0.95,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        borderRadius: 8,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        message: "Incorrect PIN",
+        isDismissible: true,
+        duration: Duration(seconds: 3),
+        //animationDuration: Duration(milliseconds: 100),
+      )..show(context);
     }
   }
 }
