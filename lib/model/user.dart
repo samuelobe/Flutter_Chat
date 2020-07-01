@@ -4,6 +4,7 @@ class User {
   final String phoneNumber;
   final String firstName;
   final String lastName;
+  final String uuid;
 
   User({
     this.email,
@@ -11,6 +12,7 @@ class User {
     this.phoneNumber,
     this.firstName,
     this.lastName,
+    this.uuid,
   });
 
   get getEmail => email;

@@ -32,8 +32,8 @@ class _ChatScreenState extends State<ChatScreen> {
           .document(DateTime.now().toString())
           .setData({
         "message": _messageController.text,
-        "email": widget.email,
-        "timestamp": "${TimeOfDay.now().hour}:${TimeOfDay.now().minute}"
+        "email": widget.currentEmail,
+        "timestamp": "${DateTime.now()}"
       });
 
       _messageController.clear();
@@ -45,9 +45,10 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  //getUUID();
   @override
   Widget build(BuildContext context) {
+    print(widget.email);
+    print(widget.currentEmail);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         resizeToAvoidBottomPadding: false,
@@ -90,8 +91,9 @@ class _ChatScreenState extends State<ChatScreen> {
                             shrinkWrap: true,
                             children: snapshot.data.documents
                                 .map((DocumentSnapshot document) {
+                              
                               return Align(
-                                alignment: document['email'] == widget.email
+                                alignment: document['email'] == widget.currentEmail
                                     ? Alignment.centerRight
                                     : Alignment.centerLeft,
                                 child: Card(

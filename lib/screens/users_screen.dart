@@ -63,7 +63,7 @@ class _UsersScreenState extends State<UsersScreen> {
                             Icons.account_circle,
                             size: 40,
                           ),
-                          title: Text(document['firstName']),
+                          title: Text("${document['firstName']} ${document['lastName']}"),
                           subtitle: Text(document['email']),
                           onTap: () async {
                             var uuid = await db.createChat(
