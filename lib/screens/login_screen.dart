@@ -28,104 +28,109 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: _formkey,
-        child: Center(
-          child: Container(
-            padding: EdgeInsets.all(25),
-            child: ListView(
-              physics: ClampingScrollPhysics(),
-              shrinkWrap: true,
-              children: <Widget>[
-                Image.asset(
-                  "assets/ehi_logo.png",
-                  height: MediaQuery.of(context).size.height * 0.20,
-                ),
-                SizedBox(
-                  height: 70,
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: "Username",
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
-                    ),
-                    //fillColor: Colors.green
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Form(
+          key: _formkey,
+          child: Center(
+            child: Container(
+              padding: EdgeInsets.all(25),
+              child: ListView(
+                physics: ClampingScrollPhysics(),
+                shrinkWrap: true,
+                children: <Widget>[
+                  Image.asset(
+                    "assets/ehi_logo.png",
+                    height: MediaQuery.of(context).size.height * 0.20,
                   ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (input) {
-                    var output;
-                    if (input.isEmpty) {
-                      output = "Please type a username";
-                    }
-                    return output;
-                  },
-                  onSaved: (input) => email = input.trim(),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: BorderSide(),
-                    ),
-                    //fillColor: Colors.green
+                  SizedBox(
+                    height: 70,
                   ),
-                  keyboardType: TextInputType.visiblePassword,
-                  validator: (input) {
-                    var output;
-                    if (input.isEmpty) {
-                      output = "Please type a password";
-                    }
-                    return output;
-                  },
-                  onSaved: (input) => password = input.trim(),
-                ),
-                SizedBox(
-                  height: 30,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Username",
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Text(
-                          "Sign In",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      onPressed: signIn,
+                      //fillColor: Colors.green
                     ),
-                    RaisedButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18.0),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (input) {
+                      var output;
+                      if (input.isEmpty) {
+                        output = "Please type a username";
+                      }
+                      return output;
+                    },
+                    onSaved: (input) => email = input.trim(),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: "Password",
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: BorderSide(),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(14.0),
-                        child: Text(
-                          "Sign Up",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignupScreen(),
-                          )),
+                      //fillColor: Colors.green
                     ),
-                  ],
-                )
-              ],
+                    keyboardType: TextInputType.visiblePassword,
+                    validator: (input) {
+                      var output;
+                      if (input.isEmpty) {
+                        output = "Please type a password";
+                      }
+                      return output;
+                    },
+                    onSaved: (input) => password = input.trim(),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Text(
+                            "Sign In",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        onPressed: signIn,
+                      ),
+                      RaisedButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Text(
+                            "Sign Up",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                        ),
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignupScreen(),
+                            )),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
