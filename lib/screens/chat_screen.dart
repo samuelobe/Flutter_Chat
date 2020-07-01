@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dash_chat/dash_chat.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -15,154 +14,130 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final GlobalKey<DashChatState> _chatViewKey = GlobalKey<DashChatState>();
+  final Firestore firestore = Firestore.instance;
+  final ScrollController _scrollController = ScrollController();
+  TextEditingController _messageController = TextEditingController();
+  String message = "";
 
-  final ChatUser user = ChatUser(
-    name: "Fayeed",
-    firstName: "Fayeed",
-    lastName: "Pawaskar",
-    uid: "123456789",
-    avatar: "https://www.wrappixel.com/ampleadmin/assets/images/users/4.jpg",
-  );
+  Future<void> onSend() async {
+    if (_messageController.text.length > 0) {
+      await firestore
+          .collection('messages')
+          .document(DateTime.now().toString())
+          .setData({"message": _messageController.text, "email": widget.email});
 
-  final ChatUser otherUser = ChatUser(
-    name: "Mrfatty",
-    uid: "25649654",
-  );
-
-  List<ChatMessage> messages = List<ChatMessage>();
-  var m = List<ChatMessage>();
-
-  var i = 0;
-
-  void systemMessage() {
-    Timer(Duration(milliseconds: 300), () {
-      if (i < 6) {
-        setState(() {
-          messages = [...messages, m[i]];
-        });
-        i++;
-      }
-      Timer(Duration(milliseconds: 300), () {
-        _chatViewKey.currentState.scrollController
-          ..animateTo(
-            _chatViewKey.currentState.scrollController.position.maxScrollExtent,
-            curve: Curves.easeOut,
-            duration: const Duration(milliseconds: 300),
-          );
-      });
-    });
-  }
-
-  void onSend(ChatMessage message) async {
-    print(message.toJson());
-    var documentReference = Firestore.instance
-        .collection('messages')
-        .document(DateTime.now().millisecondsSinceEpoch.toString());
-
-    await Firestore.instance.runTransaction((transaction) async {
-      await transaction.set(
-        documentReference,
-        message.toJson(),
+      _messageController.clear();
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        curve: Curves.easeOut,
+        duration: const Duration(milliseconds: 300),
       );
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Chat Screen"),
-      ),
-      body: NotificationListener<OverscrollIndicatorNotification>(
-        onNotification: (OverscrollIndicatorNotification overscroll) {
-          overscroll.disallowGlow();
-          return null;
-        },
-        child: StreamBuilder(
-            stream: Firestore.instance.collection('messages').snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      Theme.of(context).primaryColor,
-                    ),
-                  ),
-                );
-              } else {
-                List<DocumentSnapshot> items = snapshot.data.documents;
-                var messages =
-                    items.map((i) => ChatMessage.fromJson(i.data)).toList();
-                return DashChat(
-                  key: _chatViewKey,
-                  inverted: false,
-                  onSend: onSend,
-                  sendOnEnter: true,
-                  textInputAction: TextInputAction.send,
-                  user: user,
-                  inputDecoration: InputDecoration.collapsed(
-                      hintText: "Add message here..."),
-                  dateFormat: DateFormat('yyyy-MMM-dd'),
-                  timeFormat: DateFormat('HH:mm'),
-                  messages: messages,
-                  showUserAvatar: false,
-                  showAvatarForEveryMessage: false,
-                  scrollToBottom: true,
-                  onPressAvatar: (ChatUser user) {
-                    print("OnPressAvatar: ${user.name}");
+        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomPadding: false,
+        appBar: AppBar(
+          title: Text("Chat Screen"),
+        ),
+        body: Container(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Expanded(
+                child: NotificationListener<OverscrollIndicatorNotification>(
+                  onNotification: (OverscrollIndicatorNotification overscroll) {
+                    overscroll.disallowGlow();
+                    return null;
                   },
-                  onLongPressAvatar: (ChatUser user) {
-                    print("OnLongPressAvatar: ${user.name}");
-                  },
-                  inputMaxLines: 5,
-                  messageContainerPadding:
-                      EdgeInsets.only(left: 5.0, right: 5.0),
-                  alwaysShowSend: true,
-                  inputTextStyle: TextStyle(fontSize: 16.0),
-                  inputContainerStyle: BoxDecoration(
-                    border: Border.all(width: 0.0),
-                    color: Colors.white,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream:
+                        Firestore.instance.collection('messages').snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError)
+                        return Text('Error: ${snapshot.error}');
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor,
+                              ),
+                            ),
+                          );
+                        default:
+                          return ListView(
+                            controller: _scrollController,
+                            shrinkWrap: true,
+                            children: snapshot.data.documents
+                                .map((DocumentSnapshot document) {
+                              return Align(
+                                alignment: document['email'] == widget.email
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: Card(
+                                    color: Colors.blue,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(document['message']),
+                                    )),
+                              );
+                            }).toList(),
+                          );
+                      }
+                    },
                   ),
-                  onQuickReply: (Reply reply) {
-                    setState(() {
-                      messages.add(ChatMessage(
-                          text: reply.value,
-                          createdAt: DateTime.now(),
-                          user: user));
-
-                      messages = [...messages];
-                    });
-
-                    Timer(Duration(milliseconds: 300), () {
-                      _chatViewKey.currentState.scrollController
-                        ..animateTo(
-                          _chatViewKey.currentState.scrollController.position
-                              .maxScrollExtent,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: Stack(
+                  alignment: Alignment.centerRight,
+                  children: <Widget>[
+                    TextFormField(
+                      controller: _messageController,
+                      decoration: InputDecoration(
+                        labelText: "Send message",
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                          borderSide: BorderSide(),
+                        ),
+                        //fillColor: Colors.green
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (input) {
+                        var output;
+                        if (input.isEmpty) {
+                          output = "Please type a username";
+                        }
+                        return output;
+                      },
+                      onEditingComplete: () {
+                        FocusScope.of(context).unfocus();
+                        _scrollController.animateTo(
+                          _scrollController.position.maxScrollExtent,
                           curve: Curves.easeOut,
                           duration: const Duration(milliseconds: 300),
                         );
-
-                      if (i == 0) {
-                        systemMessage();
-                        Timer(Duration(milliseconds: 600), () {
-                          systemMessage();
-                        });
-                      } else {
-                        systemMessage();
-                      }
-                    });
-                  },
-                  onLoadEarlier: () {
-                    print("loading...");
-                  },
-                  shouldShowLoadEarlier: false,
-                  showTraillingBeforeSend: true,
-                  // TODO: Add photos with trailing prop later
-                );
-              }
-            }),
-      ),
-    );
+                      },
+                      onFieldSubmitted: (value) => onSend(),
+                    ),
+                    IconButton(
+                        color: Colors.blue,
+                        icon: Icon(Icons.send),
+                        onPressed: onSend),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 }

@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       home: SplashScreen(
         loaderColor: const Color(0xfffdfeff),
         backgroundColor: const Color(0xfffdfeff),
-        seconds: 8,
+        seconds: 6,
         photoSize: 200,
         navigateAfterSeconds: LoginScreen(),
         image: Image.asset('assets/ehiapps.gif'),),

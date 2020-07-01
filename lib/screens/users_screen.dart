@@ -59,6 +59,7 @@ class _UsersScreenState extends State<UsersScreen> {
                               MaterialPageRoute(
                                 builder: (context) => ChatScreen(
                                   name: document['name'],
+                                  email: document['email'],
                                 ),
                               )),
                         ),
