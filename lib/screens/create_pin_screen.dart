@@ -1,9 +1,9 @@
 import 'package:chat_app/model/user.dart';
-import 'package:chat_app/screens/users_screen.dart';
 import 'package:chat_app/services/auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CreatePinScreen extends StatefulWidget {
   final User user;
@@ -28,6 +28,43 @@ class CreatePinScreenState extends State<CreatePinScreen> {
       border: Border.all(color: Colors.blue),
       borderRadius: BorderRadius.circular(15),
     );
+  }
+
+  void createPin() async {
+    var text;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    
+    if (firstPin == secondPin) {
+      auth.createPIN(user: widget.user, pin: firstPin);
+      auth.authSignUp(user: widget.user, context: context);
+      prefs.setStringList(widget.user.email, [widget.user.password, ""]);
+    } else if (firstPin == "" || secondPin == "") {
+      text = "Please fill out both pin fields";
+      Flushbar(
+        margin: EdgeInsets.only(bottom: 5),
+        maxWidth: MediaQuery.of(context).size.width * 0.95,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        borderRadius: 8,
+        flushbarPosition: FlushbarPosition.TOP,
+        message: text,
+        isDismissible: true,
+        duration: Duration(seconds: 3),
+        //animationDuration: Duration(milliseconds: 100),
+      )..show(context);
+    } else {
+      text = "Inputted PINs are not the same";
+      Flushbar(
+        margin: EdgeInsets.only(bottom: 5),
+        maxWidth: MediaQuery.of(context).size.width * 0.95,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        borderRadius: 8,
+        flushbarPosition: FlushbarPosition.TOP,
+        message: text,
+        isDismissible: true,
+        duration: Duration(seconds: 3),
+        //animationDuration: Duration(milliseconds: 100),
+      )..show(context);
+    }
   }
 
   @override
@@ -103,35 +140,7 @@ class CreatePinScreenState extends State<CreatePinScreen> {
                         style: TextStyle(fontSize: 20),
                       ),
                     ),
-                    onPressed: () {
-                      var text;
-                      if (firstPin == secondPin) {
-                        auth.createPIN(user: widget.user, pin: firstPin);
-                        text = "Success";
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => UsersScreen(
-                                currentUser: widget.user,
-                              ),
-                            ));
-                      } else if (firstPin == "" || secondPin == "") {
-                        text = "Please fill out both pin fields";
-                      } else {
-                        text = "Inputted PINs are not the same";
-                      }
-                      Flushbar(
-                        margin: EdgeInsets.only(bottom: 5),
-                        maxWidth: MediaQuery.of(context).size.width * 0.95,
-                        flushbarStyle: FlushbarStyle.FLOATING,
-                        borderRadius: 8,
-                        flushbarPosition: FlushbarPosition.BOTTOM,
-                        message: text,
-                        isDismissible: true,
-                        duration: Duration(seconds: 3),
-                        //animationDuration: Duration(milliseconds: 100),
-                      )..show(context);
-                    },
+                    onPressed: createPin,
                   ),
                 ],
               ),
@@ -141,5 +150,4 @@ class CreatePinScreenState extends State<CreatePinScreen> {
       ),
     );
   }
-
 }

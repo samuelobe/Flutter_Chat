@@ -1,7 +1,7 @@
 import 'package:chat_app/model/user.dart';
 import 'package:chat_app/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'create_pin_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   @override
@@ -20,7 +20,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void createAccount() async {
     var formState = _formkey.currentState;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (formState.validate()) {
       formState.save();
       var user = User(
@@ -29,8 +28,14 @@ class _SignupScreenState extends State<SignupScreen> {
           firstName: firstName,
           lastName: lastName,
           phoneNumber: phoneNumber);
-      auth.authSignUp(user: user, context: context);
-      prefs.setStringList(user.email, [user.password, ""]);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CreatePinScreen(
+              user: user,
+            ),
+          ));
+
     }
   }
 

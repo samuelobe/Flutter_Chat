@@ -1,5 +1,4 @@
 import 'package:chat_app/model/user.dart';
-import 'package:chat_app/screens/create_pin_screen.dart';
 import 'package:chat_app/screens/users_screen.dart';
 import 'package:chat_app/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -75,8 +74,8 @@ class Auth {
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => CreatePinScreen(
-              user: user,
+            builder: (context) => UsersScreen(
+              currentUser: user,
             ),
           ));
     } catch (e) {
