@@ -53,111 +53,116 @@ class _ChatScreenState extends State<ChatScreen> {
         appBar: AppBar(
           title: Text(widget.name),
         ),
-        body: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance
-                      .collection('messages')
-                      .document(widget.uuid)
-                      .collection("data")
-                      .snapshots(),
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasError)
-                      return Text('Error: ${snapshot.error}');
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return Center(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              Theme.of(context).primaryColor,
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: Firestore.instance
+                        .collection('messages')
+                        .document(widget.uuid)
+                        .collection("data")
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError)
+                        return Text('Error: ${snapshot.error}');
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).primaryColor,
+                              ),
                             ),
-                          ),
-                        );
-                      default:
-                        return ListView(
-                          physics: AlwaysScrollableScrollPhysics(),
-                          reverse: true,
-                          controller: _scrollController,
-                          shrinkWrap: true,
-                          children: snapshot.data.documents.reversed
-                              .map((DocumentSnapshot document) {
-                            return Align(
-                              alignment:
-                                  document['email'] == widget.currentEmail
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                              child: Card(
-                                margin: EdgeInsets.all(5.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15.0),
-                                  ),
-                                  color: Colors.blue,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(document['message']),
-                                        Text(document['timestamp']),
-                                      ],
+                          );
+                        default:
+                          return ListView(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            reverse: true,
+                            controller: _scrollController,
+                            shrinkWrap: true,
+                            children: snapshot.data.documents.reversed
+                                .map((DocumentSnapshot document) {
+                              return Align(
+                                alignment:
+                                    document['email'] == widget.currentEmail
+                                        ? Alignment.centerRight
+                                        : Alignment.centerLeft,
+                                child: Card(
+                                    margin: EdgeInsets.all(5.0),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
                                     ),
-                                  )),
-                            );
-                          }).toList(),
-                        );
-                    }
-                  },
+                                    color: Colors.blue,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(document['message']),
+                                          Text(document['timestamp']),
+                                        ],
+                                      ),
+                                    )),
+                              );
+                            }).toList(),
+                          );
+                      }
+                    },
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom),
-                child: Stack(
-                  alignment: Alignment.centerRight,
-                  children: <Widget>[
-                    TextFormField(
-                      controller: _messageController,
-                      decoration: InputDecoration(
-                        labelText: "Send message",
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
-                          borderSide: BorderSide(),
+                Padding(
+                  padding: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom),
+                  child: Stack(
+                    alignment: Alignment.centerRight,
+                    children: <Widget>[
+                      TextFormField(
+                        controller: _messageController,
+                        decoration: InputDecoration(
+                          labelText: "Send message",
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(),
+                          ),
+                          //fillColor: Colors.green
                         ),
-                        //fillColor: Colors.green
+                        keyboardType: TextInputType.emailAddress,
+                        validator: (input) {
+                          var output;
+                          if (input.isEmpty) {
+                            output = "Please type a username";
+                          }
+                          return output;
+                        },
+                        onEditingComplete: () {
+                          FocusScope.of(context).unfocus();
+                          _scrollController.animateTo(
+                            _scrollController.position.maxScrollExtent,
+                            curve: Curves.easeOut,
+                            duration: const Duration(milliseconds: 300),
+                          );
+                        },
+                        onFieldSubmitted: (value) => onSend(),
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (input) {
-                        var output;
-                        if (input.isEmpty) {
-                          output = "Please type a username";
-                        }
-                        return output;
-                      },
-                      onEditingComplete: () {
-                        FocusScope.of(context).unfocus();
-                        _scrollController.animateTo(
-                          _scrollController.position.maxScrollExtent,
-                          curve: Curves.easeOut,
-                          duration: const Duration(milliseconds: 300),
-                        );
-                      },
-                      onFieldSubmitted: (value) => onSend(),
-                    ),
-                    IconButton(
-                        color: Colors.blue,
-                        icon: Icon(Icons.send),
-                        onPressed: onSend),
-                  ],
+                      IconButton(
+                          color: Colors.blue,
+                          icon: Icon(Icons.send),
+                          onPressed: onSend),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ));
   }

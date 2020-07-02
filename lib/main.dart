@@ -9,10 +9,13 @@ import 'model/user.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //prefs.clear();
   Widget initialPage;
   try {
     var previousUser = prefs.get("previousUser");
     var previousUserInfo = prefs.get(previousUser);
+    print(previousUser);
+    print(previousUserInfo);
     if (previousUserInfo[1] == "") {
       initialPage = LoginScreen();
     } else {
