@@ -110,6 +110,7 @@ class Auth {
               builder: (context) => UsersScreen(
                     currentUser: user,
                   )));
+  
     } else {
       Flushbar(
         margin: EdgeInsets.only(bottom: 5),

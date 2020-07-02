@@ -1,4 +1,5 @@
 import 'package:chat_app/model/user.dart';
+import 'package:chat_app/screens/users_screen.dart';
 import 'package:chat_app/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
@@ -78,46 +79,56 @@ class AuthScreenState extends State<AuthScreen> {
                 ),
                 SizedBox(height: 30),
                 RaisedButton(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14.0),
+                      child: Text(
+                        "Sign In",
+                        style: TextStyle(fontSize: 20),
+                      ),
+                    ),
+                    onPressed: () => auth.verifyPIN(
+                        user: widget.user,
+                        pin: submittedPin,
+                        context: context)),
+                SizedBox(
+                  height: 30,
+                ),
+                RaisedButton(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18.0),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(14.0),
                     child: Text(
-                      "Sign In",
+                      "Sign In with Biometrics",
                       style: TextStyle(fontSize: 20),
                     ),
                   ),
-                  onPressed: () {
-                    auth.verifyPIN(
-                        user: widget.user, pin: submittedPin, context: context);
+                  onPressed: () async {
+                    bool biometricsAvailable =
+                        await localAuth.canCheckBiometrics;
+
+                    if (biometricsAvailable) {
+                      var auth = await localAuth.authenticateWithBiometrics(
+                          localizedReason: "Sign into your chat app account");
+
+                      if (auth) {
+                        print("Authenticated with Fingerprint!");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UsersScreen(
+                                      currentUser: widget.user,
+                                    )));
+                      } else {
+                        print("Not Authenticated with Fingerprint!");
+                      }
+                    }
                   },
                 ),
-                SizedBox(
-                  height: 30,
-                ),
-                // RaisedButton(
-                //   shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(18.0),
-                //   ),
-                //   child: Padding(
-                //     padding: const EdgeInsets.all(14.0),
-                //     child: Text(
-                //       "Sign In with Biometrics",
-                //       style: TextStyle(fontSize: 20),
-                //     ),
-                //   ),
-                //   onPressed: () async {
-                //     bool biometricsAvailable =
-                //         await localAuth.canCheckBiometrics;
-
-                //     if (biometricsAvailable) {
-                //       var auth = localAuth.authenticateWithBiometrics(
-                //           localizedReason: "Sign into your chat app account");
-                //       print(auth);
-                //     }
-                //   },
-                // ),
               ],
             ),
           ),
