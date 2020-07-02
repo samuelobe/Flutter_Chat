@@ -4,7 +4,6 @@ import 'package:chat_app/services/auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
-import 'package:local_auth/local_auth.dart';
 
 class CreatePinScreen extends StatefulWidget {
   final User user;
@@ -143,20 +142,4 @@ class CreatePinScreenState extends State<CreatePinScreen> {
     );
   }
 
-  void _showSnackBar(String pin, BuildContext context) {
-    final snackBar = SnackBar(
-      duration: Duration(seconds: 3),
-      content: Container(
-          height: 80.0,
-          child: Center(
-            child: Text(
-              'Pin Submitted. Value: $pin',
-              style: TextStyle(fontSize: 25.0),
-            ),
-          )),
-      backgroundColor: Colors.deepPurpleAccent,
-    );
-    Scaffold.of(context).hideCurrentSnackBar();
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
 }

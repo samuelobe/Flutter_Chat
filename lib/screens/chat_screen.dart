@@ -38,7 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       _messageController.clear();
       _scrollController.animateTo(
-        _scrollController.position.maxScrollExtent,
+        0.0,
         curve: Curves.easeOut,
         duration: const Duration(milliseconds: 300),
       );
@@ -47,77 +47,72 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.email);
-    print(widget.currentEmail);
     return Scaffold(
         resizeToAvoidBottomInset: false,
         resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           title: Text(widget.name),
         ),
-        body: Container(
+        body: Padding(
           padding: EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               Expanded(
-                child: NotificationListener<OverscrollIndicatorNotification>(
-                  onNotification: (OverscrollIndicatorNotification overscroll) {
-                    overscroll.disallowGlow();
-                    return null;
-                  },
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance
-                        .collection('messages')
-                        .document(widget.uuid)
-                        .collection("data")
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasError)
-                        return Text('Error: ${snapshot.error}');
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return Center(
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Theme.of(context).primaryColor,
-                              ),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: Firestore.instance
+                      .collection('messages')
+                      .document(widget.uuid)
+                      .collection("data")
+                      .snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasError)
+                      return Text('Error: ${snapshot.error}');
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                        return Center(
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor,
                             ),
-                          );
-                        default:
-                          return ListView(
-                            controller: _scrollController,
-                            shrinkWrap: true,
-                            children: snapshot.data.documents
-                                .map((DocumentSnapshot document) {
-                              
-                              return Align(
-                                alignment: document['email'] == widget.currentEmail
-                                    ? Alignment.centerRight
-                                    : Alignment.centerLeft,
-                                child: Card(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15.0),
+                          ),
+                        );
+                      default:
+                        return ListView(
+                          physics: AlwaysScrollableScrollPhysics(),
+                          reverse: true,
+                          controller: _scrollController,
+                          shrinkWrap: true,
+                          children: snapshot.data.documents.reversed
+                              .map((DocumentSnapshot document) {
+                            return Align(
+                              alignment:
+                                  document['email'] == widget.currentEmail
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
+                              child: Card(
+                                margin: EdgeInsets.all(5.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  color: Colors.blue,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(document['message']),
+                                        Text(document['timestamp']),
+                                      ],
                                     ),
-                                    color: Colors.blue,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(document['message']),
-                                          Text(document['timestamp']),
-                                        ],
-                                      ),
-                                    )),
-                              );
-                            }).toList(),
-                          );
-                      }
-                    },
-                  ),
+                                  )),
+                            );
+                          }).toList(),
+                        );
+                    }
+                  },
                 ),
               ),
               Padding(

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:local_auth/local_auth.dart';
 
+import 'login_screen.dart';
+
 class AuthScreen extends StatefulWidget {
   final User user;
   AuthScreen({this.user});
@@ -32,6 +34,18 @@ class AuthScreenState extends State<AuthScreen> {
     return Scaffold(
         appBar: AppBar(
           title: Text("PIN"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.home),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ));
+              },
+            )
+          ],
         ),
         backgroundColor: Colors.white,
         body: Center(

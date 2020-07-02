@@ -1,5 +1,4 @@
 import 'package:chat_app/model/user.dart';
-import 'package:chat_app/screens/auth_screen.dart';
 import 'package:chat_app/screens/create_pin_screen.dart';
 import 'package:chat_app/screens/users_screen.dart';
 import 'package:chat_app/services/database.dart';
@@ -14,33 +13,41 @@ class Auth {
 
   Future<void> authSignIn({User user, BuildContext context}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var value;
+    //var value;
     try {
       await auth.signInWithEmailAndPassword(
           email: user.email, password: user.password);
       print("Signed In to Firebase Auth");
+      prefs.setString("previousUser", user.email);
+      print("Previous user set to ${prefs.get("previousUser")}");
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => UsersScreen(
+                    currentUser: user,
+                  )));
 
-      try {
-        value = prefs.getStringList(user.email)[1] ?? "";
-      } catch (e) {
-        value = "";
-      }
+      // try {
+      //   value = prefs.getStringList(user.email)[1] ?? "";
+      // } catch (e) {
+      //   value = "";
+      // }
 
-      if (value == "") {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CreatePinScreen(
-                      user: user,
-                    )));
-      } else {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => AuthScreen(
-                      user: user,
-                    )));
-      }
+      // if (value == "") {
+      //   Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //           builder: (context) => CreatePinScreen(
+      //                 user: user,
+      //               )));
+      // } else {
+      //   Navigator.push(
+      //       context,
+      //       MaterialPageRoute(
+      //           builder: (context) => AuthScreen(
+      //                 user: user,
+      //               )));
+      // }
     } catch (e) {
       Flushbar(
         margin: EdgeInsets.only(bottom: 5),
@@ -58,15 +65,18 @@ class Auth {
   }
 
   Future<void> authSignUp({User user, BuildContext context}) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       await auth.createUserWithEmailAndPassword(
           email: user.email, password: user.password);
       firestore.setUserData(user);
+      prefs.setString("previousUser", user.email);
+      print("Previous user set to ${prefs.get("previousUser")}");
       Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => UsersScreen(
-              currentUser: user,
+            builder: (context) => CreatePinScreen(
+              user: user,
             ),
           ));
     } catch (e) {
@@ -88,7 +98,7 @@ class Auth {
   createPIN({User user, String pin}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setStringList(user.email, [user.password, pin]);
-    print(prefs.getStringList(user.email)[1]);
+    print("Pin set to ${prefs.getStringList(user.email)[1]}");
   }
 
   verifyPIN({User user, String pin, BuildContext context}) async {
